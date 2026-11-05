@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17191d">
+  <title>Stratstone | Minor Damage Repair Cover Calculator</title>
+  <style>
+    :root {
+      --ink: #17191d;
+      --ink-2: #24272d;
+      --muted: #737982;
+      --line: #e2e4e7;
+      --paper: #ffffff;
+      --soft: #f4f5f6;
+      --silver: #c7cbd0;
+      --accent: #9ca3aa;
+      --green: #287653;
+      --green-soft: #eaf3ee;
+      --shadow: 0 18px 50px rgba(20, 24, 30, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #eceef0;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .calculator {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      background: var(--paper);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      animation: rise .65s ease both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px 34px 28px;
+      color: #fff;
+      background: linear-gradient(125deg, #15171b 0%, #292d33 58%, #454b52 100%);
+    }
+    .hero:after {
+      content: "";
+      position: absolute;
+      width: 290px;
+      height: 290px;
+      right: -105px;
+      top: -165px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(255,255,255,.025), 0 0 0 58px rgba(255,255,255,.02);
+      pointer-events: none;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #c7cbd0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.1px;
+      text-transform: uppercase;
+    }
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0;
+      font-size: clamp(25px, 4.6vw, 36px);
+      line-height: 1.12;
+      letter-spacing: -.8px;
+      font-weight: 700;
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 570px;
+      margin: 12px 0 0;
+      color: #d8dadd;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .content { padding: 27px 34px 30px; }
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 7px;
+      font-size: 17px;
+      line-height: 1.3;
+      letter-spacing: -.2px;
+    }
+    .step {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 25px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      color: white;
+      background: var(--ink);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .section-intro {
+      margin: 0 0 18px 35px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .damage-list { display: grid; gap: 10px; }
+    .damage-card {
+      padding: 14px 15px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .damage-card:focus-within {
+      border-color: #9ca3aa;
+      box-shadow: 0 0 0 3px rgba(156,163,170,.13);
+      transform: translateY(-1px);
+    }
+    .damage-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .damage-name { font-size: 14px; font-weight: 700; }
+    .damage-total {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .fields {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(104px,.82fr);
+      gap: 8px;
+      align-items: end;
+    }
+    .field label {
+      display: block;
+      margin: 0 0 5px;
+      color: #777e86;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+    .field input {
+      display: block;
+      width: 100%;
+      height: 39px;
+      padding: 0 10px;
+      border: 1px solid #d9dce0;
+      border-radius: 7px;
+      outline: none;
+      background: #fafbfc;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      transition: border-color .2s, background .2s;
+    }
+    .field input:focus { border-color: #747b83; background: #fff; }
+    .field input[readonly] {
+      border-color: transparent;
+      background: #f0f1f2;
+      font-weight: 700;
+    }
+    .operator {
+      align-self: center;
+      padding-top: 17px;
+      color: #8b9198;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .grand-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 15px;
+      padding: 17px 18px;
+      border-radius: 11px;
+      color: white;
+      background: var(--ink);
+    }
+    .grand-total .label {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .grand-total .sub {
+      margin-top: 4px;
+      color: #bfc4c9;
+      font-size: 10px;
+    }
+    .grand-total .amount {
+      font-size: clamp(23px, 4vw, 29px);
+      font-weight: 700;
+      letter-spacing: -.5px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .divider { height: 1px; margin: 25px 0; background: var(--line); }
+    .cover-panel {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafbfc;
+    }
+    .cover-row {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(150px, 205px);
+      gap: 18px;
+      align-items: center;
+    }
+    .cover-label { font-size: 14px; font-weight: 700; }
+    .cover-help { margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .currency-input { position: relative; }
+    .currency-input span {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #687079;
+      font-size: 14px;
+      font-weight: 700;
+      pointer-events: none;
+    }
+    .currency-input input {
+      width: 100%;
+      height: 43px;
+      padding: 0 12px 0 28px;
+      border: 1px solid #cfd3d8;
+      border-radius: 8px;
+      outline: none;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .currency-input input:focus { border-color: #747b83; box-shadow: 0 0 0 3px rgba(156,163,170,.13); }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .compare-box {
+      min-width: 0;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f0f1f2;
+    }
+    .compare-box.highlight {
+      color: #fff;
+      background: linear-gradient(135deg, #343940, #17191d);
+    }
+    .compare-label {
+      min-height: 28px;
+      color: #6e747c;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-transform: uppercase;
+      letter-spacing: .45px;
+    }
+    .highlight .compare-label { color: #c4c9ce; }
+    .compare-value {
+      margin-top: 5px;
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 700;
+      letter-spacing: -.4px;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .comparison-note {
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .value-bar {
+      display: flex;
+      width: 100%;
+      height: 12px;
+      margin-top: 15px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #e5e7e9;
+    }
+    .bar-damage {
+      width: 50%;
+      background: #747b83;
+      transition: width .45s ease;
+    }
+    .bar-cover {
+      flex: 1;
+      background: #c7cbd0;
+      transition: width .45s ease;
+    }
+    .bar-legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 7px;
+      color: #777e86;
+      font-size: 9px;
+    }
+    .benefits {
+      padding: 20px;
+      border-radius: 12px;
+      background: #f3f4f5;
+    }
+    .benefits h2 { margin: 0 0 13px; font-size: 15px; }
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 18px;
+    }
+    .benefit {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: #343940;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .tick {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 17px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      color: white;
+      background: #3d765b;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .fine-print {
+      margin: 17px 0 0;
+      color: #858b92;
+      font-size: 9px;
+      line-height: 1.55;
+    }
+    .footer {
+      padding: 13px 20px;
+      border-top: 1px solid var(--line);
+      color: #92979d;
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: .35px;
+    }
+    @media (max-width: 560px) {
+      body { padding: 0; background: #fff; }
+      .calculator { border-radius: 0; box-shadow: none; }
+      .hero { padding: 25px 20px 23px; }
+      .content { padding: 22px 18px 25px; }
+      .fields {
+        grid-template-columns: minmax(0,1fr) 14px minmax(0,1fr);
+        gap: 7px;
+      }
+      .fields .operator:nth-of-type(2) { display: none; }
+      .fields .field.total-field { grid-column: 1 / -1; }
+      .fields .field.total-field input { height: 36px; }
+      .fields .field.total-field label { margin-top: 2px; }
+      .operator { font-size: 14px; }
+      .damage-card { padding: 12px; }
+      .cover-row { grid-template-columns: 1fr; gap: 11px; }
+      .comparison { gap: 8px; }
+      .compare-box { padding: 12px; }
+      .benefit-grid { grid-template-columns: 1fr; gap: 10px; }
+      .grand-total { padding: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *:before, *:after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="calculator">
+    <header class="hero">
+      <p class="eyebrow">Stratstone · Vehicle protection</p>
+      <h1>Minor Damage Repair Cover</h1>
+      <p class="hero-copy">What could everyday damage cost over the duration of your policy? Add your estimates below and explore the potential value of cover.</p>
+    </header>
+
+    <section class="content">
+      <h2 class="section-heading"><span class="step">1</span> Estimate your potential repair costs</h2>
+      <p class="section-intro">For each type of damage, enter how many repairs you might need during the policy and the estimated cost of each repair.</p>
+
+      <div class="damage-list">
+        <article class="damage-card" data-category="scratches">
+          <div class="damage-top"><div class="damage-name">Scratches</div><div class="damage-total" id="scratchesTotal">£0.00</div></div>
+          <div class="fields">
+            <div class="field"><label for="scratchesQty">Number of repairs</label><input id="scratchesQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="operator">×</div>
+            <div class="field"><label for="scratchesCost">Cost per repair</label><input id="scratchesCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="operator">=</div>
+            <div class="field total-field"><label>Estimated total</label><input id="scratchesLine" type="text" value="£0.00" readonly aria-label="Scratches estimated total"></div>
+          </div>
+        </article>
+
+        <article class="damage-card" data-category="scuffs">
+          <div class="damage-top"><div class="damage-name">Scuffs</div><div class="damage-total" id="scuffsTotal">£0.00</div></div>
+          <div class="fields">
+            <div class="field"><label for="scuffsQty">Number of repairs</label><input id="scuffsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="operator">×</div>
+            <div class="field"><label for="scuffsCost">Cost per repair</label><input id="scuffsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="operator">=</div>
+            <div class="field total-field"><label>Estimated total</label><input id="scuffsLine" type="text" value="£0.00" readonly aria-label="Scuffs estimated total"></div>
+          </div>
+        </article>
+
+        <article class="damage-card" data-category="doorDings">
+          <div class="damage-top"><div class="damage-name">Door dings</div><div class="damage-total" id="doorDingsTotal">£0.00</div></div>
+          <div class="fields">
+            <div class="field"><label for="doorDingsQty">Number of repairs</label><input id="doorDingsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="operator">×</div>
+            <div class="field"><label for="doorDingsCost">Cost per repair</label><input id="doorDingsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="operator">=</div>
+            <div class="field total-field"><label>Estimated total</label><input id="doorDingsLine" type="text" value="£0.00" readonly aria-label="Door dings estimated total"></div>
+          </div>
+        </article>
+
+        <article class="damage-card" data-category="windscreen">
+          <div class="damage-top"><div class="damage-name">Windscreen damage</div><div class="damage-total" id="windscreenTotal">£0.00</div></div>
+          <div class="fields">
+            <div class="field"><label for="windscreenQty">Number of repairs</label><input id="windscreenQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="operator">×</div>
+            <div class="field"><label for="windscreenCost">Cost per repair</label><input id="windscreenCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="operator">=</div>
+            <div class="field total-field"><label>Estimated total</label><input id="windscreenLine" type="text" value="£0.00" readonly aria-label="Windscreen damage estimated total"></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="grand-total" aria-live="polite">
+        <div><div class="label">Total estimated damage cost</div><div class="sub">Across all repair types over the policy duration</div></div>
+        <div class="amount" id="grandTotal">£0.00</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="section-heading"><span class="step">2</span> Compare with the cost of cover</h2>
+      <p class="section-intro">Enter the price of Minor Damage Repair Cover to see the illustrative difference.</p>
+
+      <div class="cover-panel">
+        <div class="cover-row">
+          <div>
+            <div class="cover-label">Cost of MDRC cover</div>
+            <div class="cover-help">Enter the customer's quoted price for the selected policy duration.</div>
+          </div>
+          <div class="currency-input"><span>£</span><input id="coverCost" type="number" min="0" max="100000" step="0.01" placeholder="Enter price" inputmode="decimal" aria-label="Cost of MDRC cover"></div>
+        </div>
+        <div class="comparison">
+          <div class="compare-box">
+            <div class="compare-label">Estimated damage costs</div>
+            <div class="compare-value" id="comparisonDamage">£0.00</div>
+          </div>
+          <div class="compare-box highlight">
+            <div class="compare-label">Illustrative difference</div>
+            <div class="compare-value" id="difference">—</div>
+          </div>
+        </div>
+        <div class="value-bar" aria-hidden="true"><div class="bar-damage" id="damageBar"></div><div class="bar-cover" id="coverBar"></div></div>
+        <div class="bar-legend"><span>Estimated repair costs</span><span>Cost of cover</span></div>
+        <p class="comparison-note" id="comparisonNote">Enter a cover price to calculate the illustrative difference. This is a comparison of estimated costs, not a quotation or guarantee of claim payments.</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <section class="benefits">
+        <h2>More value from your cover</h2>
+        <div class="benefit-grid">
+          <div class="benefit"><span class="tick">✓</span><span>No excess to pay on eligible claims.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>Repairs at a convenient location, such as home or work.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>Lifetime repair guarantee during ownership, subject to terms.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>Up to £1,000 per SMART claim.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>£3,000 maximum aggregate claim limit.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>Three £150 windscreen contributions (£450 total).</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>£250 bodyshop contribution where a SMART repair is not possible, subject to terms.</span></div>
+          <div class="benefit"><span class="tick">✓</span><span>SMART-repairable cosmetic damage up to 40cm, subject to policy criteria.</span></div>
+        </div>
+        <p class="fine-print">This calculator is for illustrative purposes only. Repair costs are estimates entered by the user and are not a prediction of actual costs or a representation of benefits payable. The total estimated damage cost should not be interpreted as the amount that would be paid under the policy. Claims are subject to eligibility, repair assessment, policy limits, exclusions and terms and conditions. Windscreen contributions are limited to three contributions of £150 each (£450 in total). Please refer to the policy documentation for full details of cover, limitations and exclusions.</p>
+      </section>
+    </section>
+    <footer class="footer">MINOR DAMAGE REPAIR COVER · ILLUSTRATIVE CALCULATOR</footer>
+  </main>
+
+  <script>
+    (function () {
+      const categories = [
+        { key: 'scratches', qty: 'scratchesQty', cost: 'scratchesCost', line: 'scratchesLine', display: 'scratchesTotal' },
+        { key: 'scuffs', qty: 'scuffsQty', cost: 'scuffsCost', line: 'scuffsLine', display: 'scuffsTotal' },
+        { key: 'doorDings', qty: 'doorDingsQty', cost: 'doorDingsCost', line: 'doorDingsLine', display: 'doorDingsTotal' },
+        { key: 'windscreen', qty: 'windscreenQty', cost: 'windscreenCost', line: 'windscreenLine', display: 'windscreenTotal' }
+      ];
+      const money = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+      const numberValue = (id) => {
+        const el = document.getElementById(id);
+        const value = Number(el.value);
+        return Number.isFinite(value) && value > 0 ? value : 0;
+      };
+      const update = () => {
+        let grand = 0;
+        categories.forEach((item) => {
+          const qty = Math.min(999, Math.floor(numberValue(item.qty)));
+          const unitCost = Math.min(100000, numberValue(item.cost));
+          const total = qty * unitCost;
+          grand += total;
+          document.getElementById(item.line).value = money.format(total);
+          document.getElementById(item.display).textContent = money.format(total);
+        });
+        document.getElementById('grandTotal').textContent = money.format(grand);
+        document.getElementById('comparisonDamage').textContent = money.format(grand);
+
+        const cover = Math.min(100000, numberValue('coverCost'));
+        const difference = grand - cover;
+        const differenceEl = document.getElementById('difference');
+        const note = document.getElementById('comparisonNote');
+
+        if (document.getElementById('coverCost').value.trim() === '') {
+          differenceEl.textContent = '—';
+          note.textContent = 'Enter a cover price to calculate the illustrative difference. This is a comparison of estimated costs, not a quotation or guarantee of claim payments.';
+        } else {
+          differenceEl.textContent = money.format(Math.abs(difference));
+          note.textContent = difference >= 0
+            ? 'The estimated repair costs entered are ' + money.format(difference) + ' higher than the cost of cover. This is an illustrative comparison only, not a guaranteed saving or claim payment.'
+            : 'The cost of cover entered is ' + money.format(Math.abs(difference)) + ' higher than the estimated repair costs entered. This is an illustrative comparison only.';
+        }
+
+        const scale = Math.max(grand, cover, 1);
+        document.getElementById('damageBar').style.width = (grand / scale * 100) + '%';
+        document.getElementById('coverBar').style.flex = '0 0 ' + (cover / scale * 100) + '%';
+      };
+
+      document.querySelectorAll('.quantity, .unit-cost, #coverCost').forEach((input) => {
+        input.addEventListener('input', update);
+        input.addEventListener('change', update);
+      });
+      update();
+    })();
+  </script>
+</body>
+</html>
