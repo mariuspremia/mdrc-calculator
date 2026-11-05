@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#17191d">
-  <title>Stratstone | Minor Damage Repair Cover Calculator</title>
+  <title>Stratstone | MDRC Value Calculator — Brochure Embed</title>
   <style>
     :root {
       --ink: #17191d;
@@ -392,14 +392,61 @@
     @media (prefers-reduced-motion: reduce) {
       *, *:before, *:after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
     }
+
+    /* Compact brochure embed: keep input widths generous while reducing vertical space. */
+    body { padding: 8px; background: transparent; }
+    .calculator { width: min(100%, 760px); border-radius: 14px; box-shadow: 0 8px 28px rgba(20,24,30,.09); }
+    .compact-hero { padding: 18px 24px 17px; }
+    .compact-hero:after { width: 190px; height: 190px; top: -125px; right: -75px; }
+    .compact-hero .eyebrow { margin-bottom: 7px; font-size: 9px; letter-spacing: 1.7px; }
+    .compact-hero h1 { font-size: clamp(20px, 3.2vw, 25px); letter-spacing: -.4px; }
+    .compact-hero .hero-copy { margin-top: 7px; font-size: 12px; line-height: 1.4; }
+    .content { padding: 18px 24px 20px; }
+    .section-heading { font-size: 15px; margin-bottom: 5px; }
+    .section-intro { margin-bottom: 12px; font-size: 11px; }
+    .damage-list { gap: 7px; }
+    .damage-card { padding: 10px 12px; }
+    .damage-top { margin-bottom: 7px; }
+    .damage-name { font-size: 13px; }
+    .damage-total { font-size: 13px; }
+    .field input { height: 34px; }
+    .field label { font-size: 9px; }
+    .operator { padding-top: 13px; }
+    .grand-total { margin-top: 11px; padding: 12px 15px; }
+    .divider { margin: 17px 0; }
+    .cover-panel { padding: 13px; }
+    .cover-help { font-size: 10px; }
+    .currency-input input { height: 38px; }
+    .comparison { margin-top: 10px; }
+    .compare-box { padding: 11px; }
+    .compare-label { min-height: 20px; }
+    .compare-value { font-size: clamp(19px, 3vw, 23px); }
+    .benefits { padding: 15px; }
+    .benefits h2 { font-size: 14px; margin-bottom: 10px; }
+    .benefit-grid { gap: 9px 14px; }
+    .fine-print { margin-top: 12px; }
+    .footer { padding: 9px 15px; }
+    @media (max-width: 560px) {
+      body { padding: 0; }
+      .calculator { border-radius: 0; box-shadow: none; }
+      .compact-hero { padding: 18px 17px; }
+      .content { padding: 17px 15px 20px; }
+      .damage-card { padding: 10px; }
+      .fields { grid-template-columns: minmax(0,1fr) 14px minmax(0,1fr); }
+      .benefit-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <main class="calculator">
-    <header class="hero">
-      <p class="eyebrow">Stratstone · Vehicle protection</p>
-      <h1>Minor Damage Repair Cover</h1>
-      <p class="hero-copy">What could everyday damage cost over the duration of your policy? Add your estimates below and explore the potential value of cover.</p>
+    <header class="hero compact-hero">
+      <div class="hero-title-row">
+        <div>
+          <p class="eyebrow">INTERACTIVE REPAIR COST CALCULATOR</p>
+          <h1>What could the value be to you?</h1>
+        </div>
+      </div>
+      <p class="hero-copy">Estimate everyday repair costs over your policy duration, then compare them with the cost of cover.</p>
     </header>
 
     <section class="content">
