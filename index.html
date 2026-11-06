@@ -435,6 +435,55 @@
       .fields { grid-template-columns: minmax(0,1fr) 14px minmax(0,1fr); }
       .benefit-grid { grid-template-columns: 1fr; }
     }
+
+    /* Portrait brochure edition: intentionally phone-width at any iframe size. */
+    html { background: transparent; }
+    body { padding: 0 !important; background: transparent; }
+    .calculator { width: 100%; max-width: 370px; margin: 0 auto; border-radius: 13px; box-shadow: 0 6px 20px rgba(20,24,30,.09); }
+    .compact-hero { padding: 15px 15px 14px !important; }
+    .compact-hero .eyebrow { font-size: 8px; margin-bottom: 5px; }
+    .compact-hero h1 { font-size: 20px !important; line-height: 1.17; }
+    .compact-hero .hero-copy { font-size: 10.5px; margin-top: 7px; }
+    .content { padding: 14px 13px 16px !important; }
+    .section-heading { font-size: 13px; gap: 7px; }
+    .step { flex-basis: 22px; width: 22px; height: 22px; }
+    .section-intro { margin: 0 0 11px 29px; font-size: 10px; }
+    .damage-list { gap: 8px; }
+    .damage-card { padding: 10px !important; }
+    .damage-top { margin-bottom: 8px; }
+    .damage-name { font-size: 12px; }
+    .damage-total { display: none; }
+    .fields, .fields:not(#never) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 7px; align-items: end; }
+    .fields .operator, .fields .operator:nth-of-type(2) { display: none !important; }
+    .fields .field, .fields .field.total-field { grid-column: auto !important; min-width: 0; }
+    .fields .field label { font-size: 8.5px; letter-spacing: 0; text-transform: none; min-height: 20px; display: flex; align-items: end; margin-bottom: 5px; }
+    .fields .field input, .fields .field.total-field input { width: 100%; height: 38px !important; padding: 0 5px; border-radius: 7px; font-size: 12px; text-align: center; }
+    .fields .field.total-field input { font-size: 11px; }
+    .grand-total { margin-top: 11px; padding: 12px !important; }
+    .grand-total .label { font-size: 11px; }
+    .grand-total .sub { font-size: 9px; }
+    .grand-total .amount { font-size: 21px; }
+    .divider { margin: 16px 0; }
+    .cover-panel { padding: 12px; }
+    .cover-row { grid-template-columns: 1fr !important; gap: 9px; }
+    .cover-label { font-size: 12px; }
+    .cover-help { font-size: 9px; }
+    .currency-input input { height: 39px; }
+    .comparison { grid-template-columns: 1fr 1fr; gap: 7px; }
+    .compare-box { padding: 10px 8px; }
+    .compare-label { min-height: 30px; font-size: 9px; }
+    .compare-value { font-size: 19px !important; }
+    .benefits { padding: 12px; }
+    .benefits h2 { font-size: 13px; }
+    .benefit-grid { grid-template-columns: 1fr !important; gap: 8px; }
+    .benefit { font-size: 10px; }
+    .fine-print { font-size: 9px; }
+    .footer { font-size: 8px; }
+    @media (max-width: 340px) {
+      .content { padding: 12px 9px !important; }
+      .fields, .fields:not(#never) { gap: 5px; }
+      .fields .field input, .fields .field.total-field input { font-size: 11px; }
+    }
   </style>
 </head>
 <body>
@@ -457,44 +506,44 @@
         <article class="damage-card" data-category="scratches">
           <div class="damage-top"><div class="damage-name">Scratches</div><div class="damage-total" id="scratchesTotal">£0.00</div></div>
           <div class="fields">
-            <div class="field"><label for="scratchesQty">Number of repairs</label><input id="scratchesQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="field"><label for="scratchesQty">Number</label><input id="scratchesQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
             <div class="operator">×</div>
-            <div class="field"><label for="scratchesCost">Cost per repair</label><input id="scratchesCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="field"><label for="scratchesCost">Cost each</label><input id="scratchesCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
             <div class="operator">=</div>
-            <div class="field total-field"><label>Estimated total</label><input id="scratchesLine" type="text" value="£0.00" readonly aria-label="Scratches estimated total"></div>
+            <div class="field total-field"><label>Total</label><input id="scratchesLine" type="text" value="£0.00" readonly aria-label="Scratches estimated total"></div>
           </div>
         </article>
 
         <article class="damage-card" data-category="scuffs">
           <div class="damage-top"><div class="damage-name">Scuffs</div><div class="damage-total" id="scuffsTotal">£0.00</div></div>
           <div class="fields">
-            <div class="field"><label for="scuffsQty">Number of repairs</label><input id="scuffsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="field"><label for="scuffsQty">Number</label><input id="scuffsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
             <div class="operator">×</div>
-            <div class="field"><label for="scuffsCost">Cost per repair</label><input id="scuffsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="field"><label for="scuffsCost">Cost each</label><input id="scuffsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
             <div class="operator">=</div>
-            <div class="field total-field"><label>Estimated total</label><input id="scuffsLine" type="text" value="£0.00" readonly aria-label="Scuffs estimated total"></div>
+            <div class="field total-field"><label>Total</label><input id="scuffsLine" type="text" value="£0.00" readonly aria-label="Scuffs estimated total"></div>
           </div>
         </article>
 
         <article class="damage-card" data-category="doorDings">
           <div class="damage-top"><div class="damage-name">Door dings</div><div class="damage-total" id="doorDingsTotal">£0.00</div></div>
           <div class="fields">
-            <div class="field"><label for="doorDingsQty">Number of repairs</label><input id="doorDingsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="field"><label for="doorDingsQty">Number</label><input id="doorDingsQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
             <div class="operator">×</div>
-            <div class="field"><label for="doorDingsCost">Cost per repair</label><input id="doorDingsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="field"><label for="doorDingsCost">Cost each</label><input id="doorDingsCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
             <div class="operator">=</div>
-            <div class="field total-field"><label>Estimated total</label><input id="doorDingsLine" type="text" value="£0.00" readonly aria-label="Door dings estimated total"></div>
+            <div class="field total-field"><label>Total</label><input id="doorDingsLine" type="text" value="£0.00" readonly aria-label="Door dings estimated total"></div>
           </div>
         </article>
 
         <article class="damage-card" data-category="windscreen">
           <div class="damage-top"><div class="damage-name">Windscreen damage</div><div class="damage-total" id="windscreenTotal">£0.00</div></div>
           <div class="fields">
-            <div class="field"><label for="windscreenQty">Number of repairs</label><input id="windscreenQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
+            <div class="field"><label for="windscreenQty">Number</label><input id="windscreenQty" class="quantity" type="number" min="0" max="999" step="1" value="1" inputmode="numeric"></div>
             <div class="operator">×</div>
-            <div class="field"><label for="windscreenCost">Cost per repair</label><input id="windscreenCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
+            <div class="field"><label for="windscreenCost">Cost each</label><input id="windscreenCost" class="unit-cost" type="number" min="0" max="100000" step="1" placeholder="0.00" inputmode="decimal"></div>
             <div class="operator">=</div>
-            <div class="field total-field"><label>Estimated total</label><input id="windscreenLine" type="text" value="£0.00" readonly aria-label="Windscreen damage estimated total"></div>
+            <div class="field total-field"><label>Total</label><input id="windscreenLine" type="text" value="£0.00" readonly aria-label="Windscreen damage estimated total"></div>
           </div>
         </article>
       </div>
